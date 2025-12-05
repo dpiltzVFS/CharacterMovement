@@ -40,6 +40,7 @@ namespace CharacterMovement
         [field: SerializeField] protected float MinGroundedVelocity { get; set; } = 5f;
         public UnityEvent<GameObject> OnGrounded;
         public UnityEvent<RaycastHit, float> OnFootstep;
+        public UnityEvent OnJump;
 
         // public properties
         public float MoveSpeedMultiplier { get; set; } = 1f;
