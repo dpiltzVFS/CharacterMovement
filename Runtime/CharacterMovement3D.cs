@@ -148,7 +148,7 @@ namespace CharacterMovement
             float jumpVelocity = Mathf.Sqrt(2f * -Gravity * JumpHeight);
             // override current y velocity but maintain x/z velocity
             Velocity = new Vector3(Velocity.x, jumpVelocity, Velocity.z);
-            OnJump.Invoke();
+            OnJump.Invoke(GroundHitInfo, NormalizedSpeed);
         }
 
         // path to destination using navmesh
@@ -413,7 +413,8 @@ namespace CharacterMovement
             if(Mathf.Abs(collision.relativeVelocity.y) < MinGroundedVelocity) return;
             if(Vector3.Distance(point, transform.position) < landingCollisionMaxDistance)
             {
-                OnGrounded.Invoke(collision.gameObject);
+                CheckGrounded();
+                OnGrounded.Invoke(GroundHitInfo, NormalizedSpeed);
             }
         }
 

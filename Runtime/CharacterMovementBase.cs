@@ -38,9 +38,9 @@ namespace CharacterMovement
 
         [field: Header("Events")]
         [field: SerializeField] protected float MinGroundedVelocity { get; set; } = 5f;
-        public UnityEvent<GameObject> OnGrounded;
+        public UnityEvent<RaycastHit, float> OnGrounded;
         public UnityEvent<RaycastHit, float> OnFootstep;
-        public UnityEvent OnJump;
+        public UnityEvent<RaycastHit, float> OnJump;
 
         // public properties
         public float MoveSpeedMultiplier { get; set; } = 1f;
@@ -68,7 +68,10 @@ namespace CharacterMovement
 
         // methods
         public virtual void TryJump() { }
-        public virtual void Jump() { }
+        public virtual void Jump()
+        {
+            OnJump.Invoke(GroundHitInfo, NormalizedSpeed);       
+        }
         public virtual void SetMoveInput(Vector3 input) { }
         public virtual void SetLookDirection(Vector3 direction) { }
         public virtual void SetLookPosition(Vector3 position) { }
