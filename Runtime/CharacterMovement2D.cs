@@ -192,6 +192,7 @@ namespace CharacterMovement
             if (Mathf.Abs(collision.relativeVelocity.y) < MinGroundedVelocity) return;
             if (Vector3.Distance(point, transform.position) < landingCollisionMaxDistance)
             {
+                CheckGrounded();
                 OnGrounded.Invoke(GroundHitInfo, NormalizedSpeed);
             }
         }
