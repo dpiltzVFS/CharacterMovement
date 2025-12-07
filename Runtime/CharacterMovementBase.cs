@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.LowLevelPhysics;
 
 namespace CharacterMovement
 {
@@ -38,9 +39,9 @@ namespace CharacterMovement
 
         [field: Header("Events")]
         [field: SerializeField] protected float MinGroundedVelocity { get; set; } = 5f;
-        public UnityEvent<RaycastHit, float> OnGrounded;
-        public UnityEvent<RaycastHit, float> OnFootstep;
-        public UnityEvent<RaycastHit, float> OnJump;
+        public UnityEvent<GameObject,  bool, float> OnGrounded;
+        public UnityEvent<GameObject, bool, float> OnFootstep;
+        public UnityEvent<GameObject, bool, float> OnJump;
 
         // public properties
         public float MoveSpeedMultiplier { get; set; } = 1f;
@@ -58,7 +59,8 @@ namespace CharacterMovement
         public bool HasTurnInput { get; protected set; }
         public bool IsGrounded { get; protected set; }
         public GameObject SurfaceObject { get; protected set; }
-        public RaycastHit GroundHitInfo { get; protected set; }
+        public GeometryType HitColliderType {  get; protected set; }
+        public bool OverTerrain { get; protected set; }
         public Vector3 SurfaceVelocity { get; protected set; }
         public bool CanMove { get; set; } = true;
         public bool CanTurn { get; set; } = true;
@@ -70,14 +72,14 @@ namespace CharacterMovement
         public virtual void TryJump() { }
         public virtual void Jump()
         {
-            OnJump.Invoke(GroundHitInfo, NormalizedSpeed);       
+            OnJump.Invoke(SurfaceObject, OverTerrain, NormalizedSpeed);       
         }
         public virtual void SetMoveInput(Vector3 input) { }
         public virtual void SetLookDirection(Vector3 direction) { }
         public virtual void SetLookPosition(Vector3 position) { }
         public virtual void FootstepAnimEvent(AnimationEvent animationEvent)
         {
-            if (animationEvent.animatorClipInfo.weight > 0.5f && IsGrounded && NormalizedSpeed > 0.05f) OnFootstep.Invoke(GroundHitInfo, NormalizedSpeed);
+            if (animationEvent.animatorClipInfo.weight > 0.5f && IsGrounded && NormalizedSpeed > 0.05f) OnFootstep.Invoke(SurfaceObject, OverTerrain, NormalizedSpeed);
         }
     }
 }
